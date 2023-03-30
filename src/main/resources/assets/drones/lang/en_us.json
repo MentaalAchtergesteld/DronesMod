@@ -1,0 +1,16 @@
+{
+  "item.drones.exclamation_mark": "Exclamation Mark",
+  "item.drones.question_mark": "Question Mark",
+  "item.drones.raw_susmium": "Raw Susmium",
+  "item.drones.susmium_ingot": "Susmium Ingot",
+
+  "block.drones.question_mark_block": "Question Mark Block",
+  "block.drones.susmium_block": "Block of Susmium",
+  "block.drones.susmium_ore": "Susmium Ore",
+  "block.drones.raw_susmium_block": "Block of Raw Susmium",
+  "block.drones.item_repair_station": "Item Repair Station",
+
+  "container.drones.item_repair_station": "Item Repair Station",
+
+  "creativemodetab.drones_tab": "Drones!"
+}

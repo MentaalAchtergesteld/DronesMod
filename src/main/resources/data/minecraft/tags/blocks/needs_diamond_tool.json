@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": [
+    "drones:susmium_block",
+    "drones:susmium_ore",
+    "drones:raw_susmium_block"
+  ]
+}

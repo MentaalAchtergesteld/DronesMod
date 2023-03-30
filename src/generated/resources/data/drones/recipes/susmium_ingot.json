@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "drones:susmium_block"
+    }
+  ],
+  "result": {
+    "count": 9,
+    "item": "drones:susmium_ingot"
+  }
+}

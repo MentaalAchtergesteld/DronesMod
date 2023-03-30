@@ -1,0 +1,15 @@
+// 1.19.3	2023-03-25T20:01:03.5879695	Block States: drones
+a5fc009384fa6cc7ae3b3ffa4b9569b5062c0e32 assets/drones/blockstates/item_repair_station.json
+eb7ab067606ce65b962fac899edbbaf09a86200c assets/drones/blockstates/question_mark_block.json
+848286640c3a8c0cea956d1dcf8254d0bb14e39c assets/drones/blockstates/raw_susmium_block.json
+f21accabca1ffbd707763cf219f7150ed571d603 assets/drones/blockstates/susmium_block.json
+30e70197c2a3dd535e4960a2fb659f1e1b8157e5 assets/drones/blockstates/susmium_ore.json
+6b99e277557db5775fbe1fec5b0f1d06d3fb6879 assets/drones/models/block/question_mark_block.json
+dbe0899ced7d86bfc57e0a77181f48409a24c1c0 assets/drones/models/block/raw_susmium_block.json
+96f97ac073c54988d0922361aacaf9ce44d80fad assets/drones/models/block/susmium_block.json
+cee482d3f28314cbae6451c5c2e70bb54d804260 assets/drones/models/block/susmium_ore.json
+7fe2ea6cf8508b0f701d4502d73e1e9708685118 assets/drones/models/item/item_repair_station.json
+34128f79a2d7b37e886f1f87adfa26feab2f88a8 assets/drones/models/item/question_mark_block.json
+8e5c3c0ac3dd7dbcf1fa54242ea276f91b6b7d54 assets/drones/models/item/raw_susmium_block.json
+c27c16d298d9c335b857bc17b783c94c3996cb48 assets/drones/models/item/susmium_block.json
+307d7f12ddb8d61e0a84cb55b72d7805bda6f03c assets/drones/models/item/susmium_ore.json

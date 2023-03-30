@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "drones:block/item_repair_station"
+    }
+  }
+}
