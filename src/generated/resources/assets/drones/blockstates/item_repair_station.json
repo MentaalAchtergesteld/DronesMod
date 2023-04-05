@@ -1,7 +1,19 @@
 {
   "variants": {
-    "": {
+    "facing=east": {
+      "model": "drones:block/item_repair_station",
+      "y": 90
+    },
+    "facing=north": {
       "model": "drones:block/item_repair_station"
+    },
+    "facing=south": {
+      "model": "drones:block/item_repair_station",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "drones:block/item_repair_station",
+      "y": 270
     }
   }
 }

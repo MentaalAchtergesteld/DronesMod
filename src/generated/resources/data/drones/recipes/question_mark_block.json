@@ -13,5 +13,6 @@
   ],
   "result": {
     "item": "drones:question_mark_block"
-  }
+  },
+  "show_notification": true
 }

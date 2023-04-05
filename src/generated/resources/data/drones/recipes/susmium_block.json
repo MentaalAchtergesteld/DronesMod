@@ -13,5 +13,6 @@
   ],
   "result": {
     "item": "drones:susmium_block"
-  }
+  },
+  "show_notification": true
 }

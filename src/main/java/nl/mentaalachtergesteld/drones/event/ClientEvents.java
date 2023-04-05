@@ -1,4 +1,4 @@
-package nl.mentaalachtergesteld.drones.events;
+package nl.mentaalachtergesteld.drones.event;
 
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;

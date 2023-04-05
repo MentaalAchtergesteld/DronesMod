@@ -21,11 +21,15 @@ import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
+import nl.mentaalachtergesteld.drones.Drones;
+import nl.mentaalachtergesteld.drones.block.custom.ItemRepairStation;
 import nl.mentaalachtergesteld.drones.networking.ModMessages;
 import nl.mentaalachtergesteld.drones.networking.packet.ItemStackSyncS2CPacket;
 import nl.mentaalachtergesteld.drones.screen.ItemRepairStationMenu;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Map;
 
 public class ItemRepairStationBlockEntity extends BlockEntity implements MenuProvider {
     private final ItemStackHandler itemHandler = new ItemStackHandler(2) {
@@ -33,9 +37,15 @@ public class ItemRepairStationBlockEntity extends BlockEntity implements MenuPro
         protected void onContentsChanged(int slot) {
             setChanged();
             if(!level.isClientSide()) {
-//                ModMessages.sendToClients(new ItemStackSyncS2CPacket(this, worldPosition));
+                ModMessages.sendToClients(new ItemStackSyncS2CPacket(this, worldPosition));
                 level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), 3);
             }
+        }
+
+        @Override
+        public void setStackInSlot(int slot, @NotNull ItemStack stack) {
+            super.setStackInSlot(slot, stack);
+            this.onContentsChanged(slot);
         }
 
         @Override
@@ -49,6 +59,15 @@ public class ItemRepairStationBlockEntity extends BlockEntity implements MenuPro
     };
 
     private LazyOptional<IItemHandler> lazyItemHandler = LazyOptional.empty();
+    private final Map<Direction, LazyOptional<WrappedHandler>> directionWrappedHandlerMap =
+            Map.of(
+                    Direction.DOWN, LazyOptional.of(() -> new WrappedHandler(itemHandler, (i) -> i == 1, (i, s) -> false)),
+                    Direction.UP, LazyOptional.of(() -> new WrappedHandler(itemHandler, (i) -> i == 1, (i, s) -> itemHandler.isItemValid(1, s))),
+                    Direction.NORTH, LazyOptional.of(() -> new WrappedHandler(itemHandler, (i) -> i == 0, (i, s) -> itemHandler.isItemValid(0, s))),
+                    Direction.SOUTH, LazyOptional.of(() -> new WrappedHandler(itemHandler, (i) -> i == 0, (i, s) -> false)),
+                    Direction.EAST, LazyOptional.of(() -> new WrappedHandler(itemHandler, (i) -> i == 0, (i, s) -> itemHandler.isItemValid(0, s))),
+                    Direction.WEST, LazyOptional.of(() -> new WrappedHandler(itemHandler, (i) -> i == 0 || i == 1, (i, s) -> itemHandler.isItemValid(0, s) || itemHandler.isItemValid(1, s)))
+            );
 
     protected final ContainerData data;
     private int fuel = 0;
@@ -95,7 +114,24 @@ public class ItemRepairStationBlockEntity extends BlockEntity implements MenuPro
     @Override
     public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
         if(cap == ForgeCapabilities.ITEM_HANDLER) {
-            return lazyItemHandler.cast();
+            if(side == null) {
+                return lazyItemHandler.cast();
+            }
+
+            if(directionWrappedHandlerMap.containsKey(side)) {
+                Direction localDir = this.getBlockState().getValue(ItemRepairStation.FACING);
+
+                if(side == Direction.UP || side == Direction.DOWN) {
+                    return directionWrappedHandlerMap.get(side).cast();
+                }
+
+                return switch (localDir) {
+                    default -> directionWrappedHandlerMap.get(side.getOpposite()).cast();
+                    case EAST -> directionWrappedHandlerMap.get(side.getClockWise()).cast();
+                    case SOUTH -> directionWrappedHandlerMap.get(side).cast();
+                    case WEST -> directionWrappedHandlerMap.get(side.getCounterClockWise()).cast();
+                };
+            }
         }
 
         return super.getCapability(cap, side);
@@ -144,39 +180,61 @@ public class ItemRepairStationBlockEntity extends BlockEntity implements MenuPro
         return true;
     }
 
-    private void repairItem() {
-        ItemStack itemStack = this.itemHandler.getStackInSlot(1);
+    private static void repairItem(ItemRepairStationBlockEntity pEntity) {
+        ItemStack itemStack = pEntity.itemHandler.getStackInSlot(1);
         if(itemStack.getDamageValue() > 0) {
             itemStack.setDamageValue(itemStack.getDamageValue()-1);
         }
     }
 
     public static void tick(Level level, BlockPos blockPos, BlockState blockState, ItemRepairStationBlockEntity pEntity) {
-        if(level.isClientSide()) {
-            return;
-        }
+        if(!level.isClientSide()) {
+            if(pEntity.hasFuel()) {
+                pEntity.fuel--;
+                setChanged(level, blockPos, blockState);
 
-
-        if(pEntity.hasFuel()) {
-            pEntity.fuel--;
-            setChanged(level, blockPos, blockState);
-
-            pEntity.repairItem();
+                repairItem(pEntity);
+            }
         }
     }
 
     public ItemStack getRenderStack() {
+        ItemStack stack;
         if(!itemHandler.getStackInSlot(1).isEmpty()) {
-            return itemHandler.getStackInSlot(1);
+            stack = itemHandler.getStackInSlot(1);
         } else {
-            return new ItemStack(Items.AIR);
+            stack = new ItemStack(Items.AIR);
         }
+        return stack;
     }
 
     public void setHandler(ItemStackHandler itemStackHandler) {
         for(int i = 0; i < itemStackHandler.getSlots(); i++) {
             itemHandler.setStackInSlot(i, itemStackHandler.getStackInSlot(i));
         }
+    }
+
+
+    @Override
+    public @NotNull CompoundTag getUpdateTag() {
+        return saveWithoutMetadata();
+    }
+
+    public int getAnalogOutputSignal() {
+        if (!itemHandler.getStackInSlot(1).isEmpty()) {
+            ItemStack item = itemHandler.getStackInSlot(1);
+            Drones.LOGGER.info("MAX DAMAGE: " + item.getMaxDamage());
+            Drones.LOGGER.info("DAMAGE VALUE: " + item.getDamageValue());
+            Drones.LOGGER.info("FORMULA: " + 14.0/item.getMaxDamage()*item.getDamageValue()+1);
+
+            if(item.getDamageValue() == 0) {
+                return 0;
+            }
+
+            return (int) Math.floor(14.0/item.getMaxDamage()*item.getDamageValue()+1);
+
+        }
+        return 0;
     }
 }
 

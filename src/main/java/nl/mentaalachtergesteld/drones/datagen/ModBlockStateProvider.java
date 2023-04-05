@@ -25,11 +25,25 @@ public class ModBlockStateProvider extends BlockStateProvider {
         blockWithItem(ModBlocks.SUSMIUM_ORE);
         blockWithItem(ModBlocks.QUESTION_MARK_BLOCK);
 //        blockWithItem(ModBlocks.ITEM_REPAIR_STATION);
-
-        simpleBlockWithItem(ModBlocks.ITEM_REPAIR_STATION.get(), new ModelFile.ExistingModelFile(new ResourceLocation(Drones.ID, "block/item_repair_station"), existingFileHelper));
+        horizontalBlockWithItem(ModBlocks.ITEM_REPAIR_STATION, new ModelFile.ExistingModelFile(new ResourceLocation(Drones.ID, "block/item_repair_station"), existingFileHelper));
+//        simpleBlockWithItem(ModBlocks.ITEM_REPAIR_STATION.get(), new ModelFile.ExistingModelFile(new ResourceLocation(Drones.ID, "block/item_repair_station"), existingFileHelper));
     }
 
     private void blockWithItem(RegistryObject<Block> blockRegistryObject) {
         simpleBlockWithItem(blockRegistryObject.get(), cubeAll(blockRegistryObject.get()));
+    }
+
+    private void blockWithitem(RegistryObject<Block> blockRegistryObject, ModelFile modelFile) {
+        simpleBlockWithItem(blockRegistryObject.get(), modelFile);
+    }
+
+    private void horizontalBlockWithItem(RegistryObject<Block> blockRegistryObject) {
+        horizontalBlock(blockRegistryObject.get(), cubeAll(blockRegistryObject.get()));
+//        simpleBlockItem(blockRegistryObject.get(), cubeAll(blockRegistryObject.get()));
+    }
+
+    private void horizontalBlockWithItem(RegistryObject<Block> blockRegistryObject, ModelFile modelFile) {
+        horizontalBlock(blockRegistryObject.get(), modelFile);
+        simpleBlockItem(blockRegistryObject.get(), modelFile);
     }
 }

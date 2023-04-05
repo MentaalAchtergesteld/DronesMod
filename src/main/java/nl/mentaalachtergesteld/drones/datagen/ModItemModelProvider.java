@@ -22,6 +22,8 @@ public class ModItemModelProvider extends ItemModelProvider {
         simpleItem(ModItems.QUESTION_MARK);
         simpleItem(ModItems.RAW_SUSMIUM);
         simpleItem(ModItems.SUSMIUM_INGOT);
+
+        withExistingParent(ModItems.DRONE_SPAWN_EGG.getId().getPath(), mcLoc("item/template_spawn_egg"));
     }
 
     private ItemModelBuilder simpleItem(RegistryObject<Item> item) {

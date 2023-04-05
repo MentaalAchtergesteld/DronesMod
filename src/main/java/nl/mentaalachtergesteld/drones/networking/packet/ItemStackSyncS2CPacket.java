@@ -6,6 +6,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.network.NetworkEvent;
+import nl.mentaalachtergesteld.drones.Drones;
 import nl.mentaalachtergesteld.drones.block.entity.ItemRepairStationBlockEntity;
 
 import java.util.ArrayList;
@@ -34,8 +35,7 @@ public class ItemStackSyncS2CPacket {
 
     public void toBytes(FriendlyByteBuf buf) {
         Collection<ItemStack> list = new ArrayList<>();
-
-        for(int i = 0; i < list.size(); i++) {
+        for(int i = 0; i < itemStackHandler.getSlots(); i++) {
             list.add(itemStackHandler.getStackInSlot(i));
         }
 
@@ -46,6 +46,7 @@ public class ItemStackSyncS2CPacket {
     public boolean handle(Supplier<NetworkEvent.Context> supplier) {
         NetworkEvent.Context context = supplier.get();
         context.enqueueWork(() -> {
+            assert Minecraft.getInstance().level != null;
             if(Minecraft.getInstance().level.getBlockEntity(blockPos) instanceof ItemRepairStationBlockEntity blockEntity) {
                 blockEntity.setHandler(this.itemStackHandler);
             }

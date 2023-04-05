@@ -1,4 +1,4 @@
-// 1.19.3	2023-03-25T19:54:56.5639545	Loot Tables
+// 1.19.4	2023-04-05T04:13:50.96828	Loot Tables
 7cdf4d69f11f4158545999ab6439653809b4078f data/drones/loot_tables/blocks/item_repair_station.json
 e2407fc805e084aacb606ede6804b51366fe6331 data/drones/loot_tables/blocks/question_mark_block.json
 f7d8d506636833aff2211033e6ea9b549bbd5439 data/drones/loot_tables/blocks/raw_susmium_block.json
